@@ -9,6 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_library(net_lib
     src/net/socket.cpp
     src/net/tcp_listener.cpp
+    src/net/io.cpp
 )
 target_include_directories(net_lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
