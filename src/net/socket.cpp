@@ -46,11 +46,11 @@ namespace net {
         }
     }
 
-    void Socket::bind(const sockaddr* addr, socklen_t addrlen) const {
+    void Socket::bind(const sockaddr* addr, socklen_t addrlen) {
         check_error(::bind(fd, addr, addrlen), "bind()");
     }
 
-    void Socket::listen(int backlog) const {
+    void Socket::listen(int backlog) {
         check_error(::listen(fd, backlog), "listen()");
     }
 
@@ -70,11 +70,11 @@ namespace net {
         uint16_t port = 0;
 
         if (addr.ss_family == AF_INET) {
-            const auto* a4 = (sockaddr_in*)&addr;
+            const auto* a4 = reinterpret_cast<const sockaddr_in*>(&addr);
             inet_ntop(AF_INET, &a4->sin_addr, ip, sizeof(ip));
             port = ntohs(a4->sin_port);
         } else if (addr.ss_family == AF_INET6) {
-            const auto* a6 = (sockaddr_in6*)&addr;
+            const auto* a6 = reinterpret_cast<sockaddr_in6*>(&addr);
             inet_ntop(AF_INET6, &a6->sin6_addr, ip, sizeof(ip));
             port = ntohs(a6->sin6_port);
         } else {
@@ -82,5 +82,20 @@ namespace net {
         }
 
         return {Socket(client_fd), ClientAddress{ip, port}};
+    }
+
+    bool Socket::is_valid() const noexcept {
+        return fd != -1;
+    }
+
+    int Socket::native_handle() const noexcept {
+        return fd;
+    }
+
+    void Socket::set_reuse_address(bool enable) {
+        int optval = enable ? 1 : 0;
+        check_error(::setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,
+                    &optval, sizeof(optval)),
+                    "setsockopt(SO_REUSEADDR)");
     }
 }

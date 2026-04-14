@@ -2,7 +2,8 @@
 
 #include <sys/socket.h>
 #include <utility>
-
+#include <string>
+#include <cinttypes>
 
 namespace net {
     struct ClientAddress {
@@ -25,8 +26,12 @@ namespace net {
         Socket& operator=(const Socket&) = delete;
 
         void close() noexcept;
-        void bind(const sockaddr* addr, socklen_t addrlen) const;
-        void listen(int backlog) const;
+        void bind(const sockaddr* addr, socklen_t addrlen);
+        void listen(int backlog);
         [[nodiscard]] std::pair<Socket, ClientAddress> accept() const;
+
+        bool is_valid() const noexcept;
+        int native_handle() const noexcept;
+        void set_reuse_address(bool enable);
     };
 }
