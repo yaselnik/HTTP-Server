@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_library(net_lib
+add_library(net_lib STATIC
     src/net/socket.cpp
     src/net/tcp_listener.cpp
     src/net/io.cpp
@@ -17,6 +17,20 @@ target_include_directories(net_lib PUBLIC
 target_compile_options(net_lib PRIVATE
     -Wall -Wextra -Wpedantic -Wconversion)
 
+add_library(http_lib STATIC
+    src/http/serializer.cpp
+    src/http/response.cpp
+    src/http/parser.cpp
+)
+
+target_include_directories(http_lib PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+target_link_libraries(http_lib PUBLIC net_lib)
+
+target_link_libraries(http_lib PUBLIC net_lib)
+
 add_executable(server_app src/main.cpp)
 
-target_link_libraries(server_app PRIVATE net_lib)
+target_link_libraries(server_app PRIVATE http_lib)
