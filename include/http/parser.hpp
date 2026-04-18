@@ -1,3 +1,5 @@
+#pragma once
+
 #include "request.hpp"
 
 namespace http {

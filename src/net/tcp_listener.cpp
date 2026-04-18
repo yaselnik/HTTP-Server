@@ -6,7 +6,7 @@
 #include <system_error>
 
 namespace net {
-    TcpListener::TcpListener(std::string& address, uint16_t port, int backlog, bool reuse_addr) {
+    TcpListener::TcpListener(const std::string& address, uint16_t port, int backlog, bool reuse_addr) {
         addrinfo hints{};
         hints.ai_family   = AF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;

@@ -29,8 +29,26 @@ target_include_directories(http_lib PUBLIC
 
 target_link_libraries(http_lib PUBLIC net_lib)
 
-target_link_libraries(http_lib PUBLIC net_lib)
+add_library(router_lib STATIC
+    src/router/router.cpp
+)
+
+target_include_directories(router_lib PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+target_link_libraries(router_lib PUBLIC http_lib)
+
+add_library(server_lib STATIC
+    src/server/server.cpp
+)
+
+target_include_directories(server_lib PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+target_link_libraries(server_lib PUBLIC router_lib)
 
 add_executable(server_app src/main.cpp)
 
-target_link_libraries(server_app PRIVATE http_lib)
+target_link_libraries(server_app PRIVATE server_lib)

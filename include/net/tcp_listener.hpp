@@ -8,7 +8,7 @@
 namespace net {
     class TcpListener {
     public:
-        TcpListener(std::string& address, uint16_t port, int backlog = 128, bool reuse_addr = true);
+        TcpListener(const std::string& address, uint16_t port, int backlog = 128, bool reuse_addr = true);
         ~TcpListener() = default;
 
         TcpListener(TcpListener&&) noexcept = default;
