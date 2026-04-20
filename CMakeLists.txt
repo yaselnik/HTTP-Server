@@ -40,6 +40,7 @@ target_include_directories(router_lib PUBLIC
 target_link_libraries(router_lib PUBLIC http_lib)
 
 add_library(server_lib STATIC
+    src/server/thread_pool.cpp
     src/server/server.cpp
 )
 

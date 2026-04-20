@@ -26,12 +26,7 @@ int main() {
 
     server.add_route(http::Method::OPTIONS, "/ping",
         [](const http::Request&) {
-            http::Response resp;
-            resp.status_code = 204;
-            resp.message = "No Content";
-            resp.headers.emplace_back("Allow", "GET, POST, OPTIONS");
-            resp.headers.emplace_back("Access-Control-Allow-Origin", "*");
-            return resp;
+            return http::method_not_allowed("GET, OPTIONS");
         });
 
     std::cout << "[INFO] Server started on http://0.0.0.0:8080\n";

@@ -4,6 +4,7 @@
 #include <memory>
 #include "http/parser.hpp"
 #include "http/serializer.hpp"
+#include "server/thread_pool.hpp"
 
 namespace server {
     HttpServer::HttpServer(const std::string& address, uint16_t port)
@@ -17,11 +18,14 @@ namespace server {
     }
 
     void HttpServer::start() {
+        ThreadPool pool;
         running = true;
 
         while (running) {
             auto [client, addr] = listener.accept();
-            handle_connection(std::move(client), addr);
+            pool.submit([this, client = std::move(client), addr]() mutable{
+                handle_connection(std::move(client), addr);
+            });
         }
     }
 
